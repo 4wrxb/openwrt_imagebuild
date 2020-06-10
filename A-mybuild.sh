@@ -119,6 +119,7 @@ fi
 
 # Absorb the FILES switch into the variable to handle a lack of the directory
 if [ -d "$ADDFILES" ]; then
+  ln -sf "$ADDFILES" "$VERDIR/"
   ADDFILES="FILES=$ADDFILES"
 else
   ADDFILES=""
@@ -146,7 +147,6 @@ elif grep -q mismatch $LOGFILE_ABS; then
   # Ignore verbose for build fixing, print this to shell because the build needs re-run after cleanup
   echo "Build failed, possibly due to package mismatches. Cleaning the package cache." 2>&1 | tee -a $LOGFILE_ABS
   for f in $VERDIR/dl/openwrt_*; do
-    echo $f
     zcat $f | sed -ne '/^Filename:/s/.* //p' -e '/^SHA256sum:/s/.* //p' | while read file; do
       read sum
       if [ -f "$VERDIR/dl/$file" ]; then
