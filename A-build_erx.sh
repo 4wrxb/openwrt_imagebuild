@@ -9,7 +9,7 @@ VER="19.07.3"
 VERDIR="openwrt-imagebuilder-${VER}-ramips-mt7621.Linux-x86_64"
 
 # Additional files directory and log files (relative to script or absolute)
-ADDFILES="my_files"
+ADDFILES="my_files_erx"
 LOGFILE="build.log"
 
 PPPOE_PACKAGES="-ppp -ppp-mod-pppoe"
@@ -54,13 +54,11 @@ if [ -z "$1" ]; then
   # Luci-apps
   PACKAGES="$PACKAGES luci-app-acme luci-app-ddns luci-app-openvpn luci-app-simple-adblock luci-app-statistics luci-app-upnp luci-app-wireguard luci-app-wol acme-dnsapi"
   # Shell CMD tools"
-  PACKAGES="$PACKAGES bash diffutils git git-http htop nano sudo"
-  # Shadow commands
-  PACKAGES="$PACKAGES shadow-groupadd shadow-groupdel shadow-groupmems shadow-groupmod shadow-useradd shadow-userdel shadow-usermod"
+  PACKAGES="$PACKAGES diffutils git git-http htop nano"
+  # User management commands
+  PACKAGES="$PACKAGES sudo shadow-groupadd shadow-groupdel shadow-groupmems shadow-groupmod shadow-useradd shadow-userdel shadow-usermod"
   # Text editing tools
-  # https://github.com/openwrt/packages/issues/11960
-  #PACKAGES="$PACKAGES vim-fuller less"
-  PACKAGES="$PACKAGES vim-fuller"
+  PACKAGES="$PACKAGES vim less"
 else
   while :; do
     case "$1" in
@@ -71,7 +69,7 @@ else
         PPPOE_PACKAGES=""
       ;;
       --no-ipv6)
-        PACKAGES="$PACKAGES -ip6tables -odhcp6c -kmod-ipv6 -kmod-ip6dables -odhcpd-ipv6only"
+        PACKAGES="$PACKAGES -ip6tables -odhcp6c -kmod-ipv6 -kmod-ip6tables -odhcpd-ipv6only"
       ;;
       --packages)
         PACKAGES="$PACKAGES $2"
