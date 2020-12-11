@@ -4,8 +4,9 @@ VERBOSE=0
 DEVICE="re450-v1"
 
 # Version dir containing the imagebuilder (relative to script or absolute)
-VER="19.07.3"
+VER="19.07.5"
 
+# NOTE: script assumes this is JUST a directory name
 VERDIR="openwrt-imagebuilder-${VER}-ar71xx-generic.Linux-x86_64"
 
 # Additional files directory and log files (relative to script or absolute)
@@ -73,10 +74,6 @@ else
       --no-ipv6)
         PACKAGES="$PACKAGES -ip6tables -odhcp6c -kmod-ipv6 -kmod-ip6tables -odhcpd-ipv6only"
       ;;
-      --packages)
-        PACKAGES="$PACKAGES $2"
-        shift
-      ;;
       --no-luci)
         LUCI_PACKAGES=""
       ;;
@@ -119,7 +116,7 @@ fi
 
 # Absorb the FILES switch into the variable to handle a lack of the directory
 if [ -d "$ADDFILES" ]; then
-  ln -sf "$ADDFILES" "$VERDIR/"
+  ln -sf "../$ADDFILES" "$VERDIR/"
   ADDFILES="FILES=$ADDFILES"
 else
   ADDFILES=""

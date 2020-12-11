@@ -1,6 +1,6 @@
 openwrt-imagebuilder*
 build.log*
 # My files are in a secure repo that is managed with egit on the device
-my_files/*
+my_files*/*
 # Include the egit config, when downloading this set-up use egit to checkout
-!my_files/.egit.conf
+!my_files*/.egit.conf
