@@ -1,20 +1,14 @@
 #!/bin/sh
 
+################################################################################
+# LOG FILE & VERBOSITY SETUP
+################################################################################
 VERBOSE=0
-DEVICE="re450-v1"
-
-# Version dir containing the imagebuilder (relative to script or absolute)
-VER="19.07.5"
-
-# NOTE: script assumes this is JUST a directory name
-VERDIR="openwrt-imagebuilder-${VER}-ar71xx-generic.Linux-x86_64"
-
-# Additional files directory and log files (relative to script or absolute)
-ADDFILES="my_files_re450"
 LOGFILE="build.log"
 
-PPPOE_PACKAGES="-ppp -ppp-mod-pppoe"
-LUCI_PACKAGES="uhttpd uhttpd-mod-ubus libiwinfo-lua luci-base luci-app-firewall luci-mod-admin-full luci-theme-bootstrap"
+# CD to the script directory for safety
+SCRIPT_DIR_ABS=$(dirname $(readlink -f $0))
+cd "$SCRIPT_DIR_ABS"
 
 dbg() {
   echo "$@" >> $LOGFILE_ABS
@@ -47,6 +41,74 @@ while :; do
   esac
   shift
 done
+
+################################################################################
+# CORE CONFIGURATION (device & version)
+################################################################################
+DEVICE="re450-v1"
+
+# Version dir containing the imagebuilder (relative to script or absolute)
+VER="19.07.5"
+
+# NOTE: script assumes this is JUST a directory name
+VERDIR="openwrt-imagebuilder-${VER}-ar71xx-generic.Linux-x86_64"
+
+# Target string for custom packages generation
+# TODO: would be safer to capture this from repositories.conf (e.g. from the base entry)
+PKG_TARGET="mips_24kc"
+
+################################################################################
+# OVERRIDES CONFIGURATION (files & packages)
+################################################################################
+# Additional files directory
+ADDFILES="my_files_re450"
+
+# Add custom package repos
+CUSTPKG_DIR="$SCRIPT_DIR_ABS/custom_packages/$PKG_TARGET"
+
+rm prepend.tmp > /dev/null 2>&1
+touch prepend.tmp
+
+if [ -d $CUSTPKG_DIR ]; then
+  for pkgdir in $CUSTPKG_DIR/*/; do
+    if ! grep -qs "$pkgdir" "$VERDIR/repositories.conf"; then
+      repo_name="${pkgdir#$CUSTPKG_DIR}"
+      tmp="$repo_name/"
+      while [ "$repo_name" != "$tmp" ]; do
+        repo_name="$tmp"
+        tmp="${tmp#/}"
+        tmp="${tmp%/}"
+      done
+      echo "src custom_$repo_name file://$pkgdir" >> prepend.tmp
+    fi
+  done
+fi
+
+# See if the file needs updated
+if [ $(wc -l < prepend.tmp) -ne 0 ]; then
+  # Backup the original file
+  cp "$VERDIR/repositories.conf" "$VERDIR/repositories.conf.bak"
+
+  # Add an extra newline to the prepend to break sections
+  echo "" >> prepend.tmp
+
+  # Put the existing repositories.conf after prepend
+  cat "$VERDIR/repositories.conf" >> prepend.tmp
+
+  # Now start repositories.conf over with our auto-add comment
+  # Note: this is dumb and just keeps adding the auto-add comment
+  echo "# Auto-added custom package repos" > "$VERDIR/repositories.conf"
+
+  cat prepend.tmp >> "$VERDIR/repositories.conf"
+fi
+
+rm prepend.tmp
+
+################################################################################
+# PACKAGE CONFIGURATION (packages & switch selection of packages)
+################################################################################
+PPPOE_PACKAGES="-ppp -ppp-mod-pppoe"
+LUCI_PACKAGES="uhttpd uhttpd-mod-ubus libiwinfo-lua luci-base luci-app-firewall luci-mod-admin-full luci-theme-bootstrap"
 
 # Then use my default config OR process build switches
 if [ -z "$1" ]; then
@@ -114,6 +176,9 @@ else
   PACKAGES="$LUCI_PACKAGES $PACKAGES $PPPOE_PACKAGES"
 fi
 
+################################################################################
+# RUN BUILD
+################################################################################
 # Absorb the FILES switch into the variable to handle a lack of the directory
 if [ -d "$ADDFILES" ]; then
   ln -sf "../$ADDFILES" "$VERDIR/"
@@ -138,6 +203,9 @@ fi
 
 # IMPORTANT: we're already in VERDIR here
 
+################################################################################
+# CHECK RESULT & ATTEMPT FIX
+################################################################################
 if [ $? -eq 0 ]; then
   echo "Build completed successfully." | tee -a $LOGFILE_ABS
 elif grep -q mismatch $LOGFILE_ABS; then
@@ -161,4 +229,3 @@ elif grep -q mismatch $LOGFILE_ABS; then
 else
   echo "Build failed for unknown reason. Please review $LOGFILE_ABS" 2>&1 | tee -a $LOGFILE_ABS
 fi
-

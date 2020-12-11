@@ -1,0 +1,1 @@
+Use this directory to pre-empt packages. The **version** must match (i.e. entire ipk name) so if forcing an upgrade link it back to the name imagebuilder will want.

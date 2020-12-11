@@ -1,0 +1,11 @@
+Package: luci-app-acme
+Version: git-20.294.22655-09cfbb3
+Depends: libc, luci-mod-admin-full, acme
+License: GPL-3.0-or-later
+Section: luci
+Architecture: all
+Installed-Size: 2560
+Filename: luci-app-acme_git-20.294.22655-09cfbb3_all.ipk
+Size: 3438
+SHA256sum: 1d8344baeea8694d5ad39b65fe53feb14bda47ae436f0f455cdec5e6a93a3b88
+Description:  ACME package - LuCI interface
