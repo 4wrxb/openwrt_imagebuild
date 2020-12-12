@@ -45,23 +45,23 @@ done
 ################################################################################
 # CORE CONFIGURATION (device & version)
 ################################################################################
-DEVICE="ubnt-erx"
+DEVICE="tplink_c2600"
 
 # Version dir containing the imagebuilder (relative to script or absolute)
 VER="19.07.5"
 
 # NOTE: script assumes this is JUST a directory name
-VERDIR="openwrt-imagebuilder-${VER}-ramips-mt7621.Linux-x86_64"
+VERDIR="openwrt-imagebuilder-${VER}-ipq806x-generic.Linux-x86_64"
 
 # Target string (for custom packages generation)
 # TODO: would be safer to capture this from repositories.conf (e.g. from the base entry)
-PKG_TARGET="mipsel_24kc"
+PKG_TARGET="arm_cortex-a15_neon-vfpv4"
 
 ################################################################################
 # OVERRIDES CONFIGURATION (files & packages)
 ################################################################################
 # Additional files directory
-ADDFILES="my_files_erx"
+ADDFILES="my_files_c2600"
 
 # Add custom package repos
 CUSTPKG_DIR="$SCRIPT_DIR_ABS/custom_packages/$PKG_TARGET"
@@ -108,7 +108,7 @@ rm prepend.tmp
 # PACKAGE CONFIGURATION (packages & switch selection of packages)
 ################################################################################
 PPPOE_PACKAGES="-ppp -ppp-mod-pppoe"
-LUCI_PACKAGES="uhttpd uhttpd-mod-ubus luci-base luci-app-firewall luci-mod-admin-full luci-theme-bootstrap"
+LUCI_PACKAGES="uhttpd uhttpd-mod-ubus libiwinfo-lua luci-base luci-app-firewall luci-mod-admin-full luci-theme-bootstrap"
 
 # Then use my default config OR process build switches
 if [ -z "$1" ]; then

@@ -53,7 +53,7 @@ VER="19.07.5"
 # NOTE: script assumes this is JUST a directory name
 VERDIR="openwrt-imagebuilder-${VER}-ar71xx-generic.Linux-x86_64"
 
-# Target string for custom packages generation
+# Target string (for custom packages generation)
 # TODO: would be safer to capture this from repositories.conf (e.g. from the base entry)
 PKG_TARGET="mips_24kc"
 
