@@ -121,7 +121,9 @@ if [ -z "$1" ]; then
   # User management commands
   PACKAGES="$PACKAGES sudo shadow-groupadd shadow-groupdel shadow-groupmems shadow-groupmod shadow-useradd shadow-userdel shadow-usermod"
   # Text editing tools
-  PACKAGES="$PACKAGES vim less"
+  PACKAGES="$PACKAGES vim-full less"
+  # Scripting
+  PACKAGES="$PACKAGES python-light python3-light perl"
 else
   while :; do
     case "$1" in

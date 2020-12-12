@@ -9,11 +9,9 @@ Includes todos for personal files repo(s)
 
 ## ERX-CA Files
 
-- Test miniupnpd multiple interface settings
 - Fix-up fastnet settings (no dns/gateway)
 - Set-up VPN servers and bring back configs
 - Test & confirm machines SSH setup
 - Accpet machines ssh key to admin with additional password check for interactive shells
 - egit mystuff in, use basic vimrc with vim package?
-- add acme to upgrade keep.d?
-- moving things to uci-defaults form /etc/config ?
+- move things to uci-defaults form /etc/config ?
