@@ -45,20 +45,20 @@ done
 ################################################################################
 # CORE CONFIGURATION (device & version)
 ################################################################################
-DEVICE="ubnt-erx"
+DEVICE="tplink_c2600"
 
 # Custom nickname for my_fiels subdirectory and EXTRA_IMAGE_NAME
-NICKNAME="erx"
+NICKNAME="c2600_ap"
 
 # Version dir containing the imagebuilder (relative to script or absolute)
 VER="19.07.5"
 
 # NOTE: script assumes this is JUST a directory name
-VERDIR="openwrt-imagebuilder-${VER}-ramips-mt7621.Linux-x86_64"
+VERDIR="openwrt-imagebuilder-${VER}-ipq806x-generic.Linux-x86_64"
 
 # Target string (for custom packages generation)
 # TODO: would be safer to capture this from repositories.conf (e.g. from the base entry)
-PKG_TARGET="mipsel_24kc"
+PKG_TARGET="arm_cortex-a15_neon-vfpv4"
 
 ################################################################################
 # OVERRIDES CONFIGURATION (files & packages)
@@ -111,14 +111,14 @@ rm prepend.tmp
 # PACKAGE CONFIGURATION (packages & switch selection of packages)
 ################################################################################
 PPPOE_PACKAGES="-ppp -ppp-mod-pppoe"
-LUCI_PACKAGES="uhttpd uhttpd-mod-ubus luci-base luci-app-firewall luci-mod-admin-full luci-theme-bootstrap"
+LUCI_PACKAGES="uhttpd uhttpd-mod-ubus libiwinfo-lua luci-base luci-app-firewall luci-mod-admin-full luci-theme-bootstrap"
 
 # Then use my default config OR process build switches
 if [ -z "$1" ]; then
   # Use OpenSSL and OpenSSH
   PACKAGES="$PACKAGES $PPPOE_PACKAGES $LUCI_PACKAGES luci-ssl-openssl -dropbear openssh-client openssh-server openvpn-openssl"
   # Luci-apps
-  PACKAGES="$PACKAGES luci-app-acme luci-app-ddns luci-app-openvpn luci-app-upnp luci-app-wireguard luci-app-wol acme-dnsapi"
+  PACKAGES="$PACKAGES luci-app-wol"
   # Shell CMD tools"
   PACKAGES="$PACKAGES diffutils git git-http htop nano"
   # User management commands
@@ -127,6 +127,8 @@ if [ -z "$1" ]; then
   PACKAGES="$PACKAGES vim-full less"
   # Scripting
   PACKAGES="$PACKAGES python-light python3-light perl"
+  # AP config (no router)
+  PACKAGES="$PACKAGES -dnsmasq -luci-app-firewall -firewall -iptables -odhcpd -odhcpd-ipv6only"
 else
   while :; do
     case "$1" in

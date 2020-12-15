@@ -47,6 +47,9 @@ done
 ################################################################################
 DEVICE="tplink_c2600"
 
+# Custom nickname for my_fiels subdirectory and EXTRA_IMAGE_NAME
+NICKNAME="c2600"
+
 # Version dir containing the imagebuilder (relative to script or absolute)
 VER="19.07.5"
 
@@ -61,7 +64,7 @@ PKG_TARGET="arm_cortex-a15_neon-vfpv4"
 # OVERRIDES CONFIGURATION (files & packages)
 ################################################################################
 # Additional files directory
-ADDFILES="my_files_c2600"
+ADDFILES="my_files/$NICKNAME"
 
 # Add custom package repos
 CUSTPKG_DIR="$SCRIPT_DIR_ABS/custom_packages/$PKG_TARGET"
@@ -182,7 +185,7 @@ fi
 # Absorb the FILES switch into the variable to handle a lack of the directory
 if [ -d "$ADDFILES" ]; then
   ln -sf "../$ADDFILES" "$VERDIR/"
-  ADDFILES="FILES=$ADDFILES"
+  ADDFILES="FILES=${ADDFILES##*/}"
 else
   ADDFILES=""
 fi
@@ -196,9 +199,9 @@ dbg "\nRunning command:"
 dbg "make image PROFILE=$DEVICE $ADDFILES PACKAGES="'"'"${PACKAGES# }"'"'" $@\n"
 
 if [ "$VERBOSE" -eq "1" ]; then
-  (cd $VERDIR && make image PROFILE=$DEVICE $ADDFILES PACKAGES="${PACKAGES# }" $@ 2>&1 | tee -a $LOGFILE_ABS)
+  (cd $VERDIR && make image EXTRA_IMAGE_NAME=$NICKNAME PROFILE=$DEVICE $ADDFILES PACKAGES="${PACKAGES# }" $@ 2>&1 | tee -a $LOGFILE_ABS)
 else
-  (cd $VERDIR && make image PROFILE=$DEVICE $ADDFILES PACKAGES="${PACKAGES# }" $@ >> $LOGFILE_ABS 2>&1)
+  (cd $VERDIR && make image EXTRA_IMAGE_NAME=$NICKNAME PROFILE=$DEVICE $ADDFILES PACKAGES="${PACKAGES# }" $@ >> $LOGFILE_ABS 2>&1)
 fi
 
 # IMPORTANT: we're already in VERDIR here
@@ -208,6 +211,12 @@ fi
 ################################################################################
 if [ $? -eq 0 ]; then
   echo "Build completed successfully." | tee -a $LOGFILE_ABS
+  echo "Resulting files are:" | tee -a $LOGFILE_ABS
+  # Nickname is sanatized for underscores due to build logic
+  # Note, this isn't perfect, e.g. if a nickname is a substring of another.
+  # FUTURE: can use VERDIR to get most of the name
+  ls -1 $VERDIR/bin/targets/*/*/*-$(echo $NICKNAME | sed -e 's/_/-/')-* | tee -a $LOGFILE_ABS
+  ls -1 $VERDIR/bin/targets/*/*/*sums | tee -a $LOGFILE_ABS
 elif grep -q mismatch $LOGFILE_ABS; then
   # Ignore verbose for build fixing, print this to shell because the build needs re-run after cleanup
   echo "Build failed, possibly due to package mismatches. Cleaning the package cache." 2>&1 | tee -a $LOGFILE_ABS
