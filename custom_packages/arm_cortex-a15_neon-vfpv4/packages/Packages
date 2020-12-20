@@ -1,0 +1,23 @@
+Package: acme-dnsapi
+Version: 2.8.7-4
+Depends: libc, acme
+License: GPL-3.0-only
+Section: net
+Architecture: all
+Installed-Size: 111899
+Filename: acme-dnsapi_2.8.7-4_all.ipk
+Size: 112787
+SHA256sum: be6d3bfa002c1a7f020ef77e2fd2c2606606492f348e5a3655f8bba415bd091b
+Description:  This package provides DNS API integration for ACME (Letsencrypt) client.
+
+Package: acme
+Version: 2.8.7-4
+Depends: libc, wget-ssl, ca-bundle, openssl-util, socat
+License: GPL-3.0-only
+Section: net
+Architecture: all
+Installed-Size: 50586
+Filename: acme_2.8.7-4_all.ipk
+Size: 51527
+SHA256sum: 8a0cf4f920f89d16998d22f40a54bc97d672ddc9e2a75d6d93f3780e9e5b35b1
+Description:  A client for issuing Letsencrypt certificates.
