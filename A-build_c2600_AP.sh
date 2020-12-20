@@ -118,7 +118,7 @@ if [ -z "$1" ]; then
   # Use OpenSSL and OpenSSH
   PACKAGES="$PACKAGES $PPPOE_PACKAGES $LUCI_PACKAGES luci-ssl-openssl -dropbear openssh-client openssh-server openvpn-openssl"
   # Luci-apps
-  PACKAGES="$PACKAGES luci-app-wol"
+  PACKAGES="$PACKAGES luci-app-uhttpd luci-app-wol"
   # Shell CMD tools"
   PACKAGES="$PACKAGES diffutils git git-http htop nano"
   # User management commands
