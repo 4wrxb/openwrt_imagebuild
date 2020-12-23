@@ -117,10 +117,8 @@ LUCI_PACKAGES="uhttpd uhttpd-mod-ubus luci-base luci-app-firewall luci-mod-admin
 if [ -z "$1" ]; then
   # Use OpenSSL and OpenSSH
   PACKAGES="$PACKAGES $PPPOE_PACKAGES $LUCI_PACKAGES luci-ssl-openssl -dropbear openssh-client openssh-server openvpn-openssl"
-  # Luci-apps - Switch & VPN bridge only
-  PACKAGES="$PACKAGES luci-app-openvpn luci-app-wireguard luci-app-uhttpd luci-app-wol"
-  # Avahi daemon for reflector purposes
-  PACKAGES="$PACKAGES avahi-dbus-daemon"
+  # Luci-apps
+  PACKAGES="$PACKAGES luci-app-acme luci-app-ddns luci-app-openvpn luci-app-upnp luci-app-wireguard luci-app-uhttpd luci-app-wol acme-dnsapi"
   # Shell CMD tools"
   PACKAGES="$PACKAGES diffutils git git-http htop nano"
   # User management commands
@@ -129,8 +127,6 @@ if [ -z "$1" ]; then
   PACKAGES="$PACKAGES vim-full less"
   # Scripting
   PACKAGES="$PACKAGES python-light python3-light perl"
-  # Switch config (no router) - EXCEPT: keep dnsmask for dhcp on fastnet
-  PACKAGES="$PACKAGES -luci-app-firewall -firewall -iptables -odhcpd -odhcpd-ipv6only"
 else
   while :; do
     case "$1" in
