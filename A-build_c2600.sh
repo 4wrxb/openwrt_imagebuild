@@ -120,7 +120,7 @@ if [ -z "$1" ]; then
   # Luci-apps
   PACKAGES="$PACKAGES luci-app-acme luci-app-ddns luci-app-openvpn luci-app-upnp luci-app-wireguard luci-app-uhttpd luci-app-wol acme-dnsapi"
   # Shell CMD tools"
-  PACKAGES="$PACKAGES diffutils git git-http htop nano"
+  PACKAGES="$PACKAGES diffutils curl git git-http htop nano"
   # User management commands
   PACKAGES="$PACKAGES sudo shadow-groupadd shadow-groupdel shadow-groupmems shadow-groupmod shadow-useradd shadow-userdel shadow-usermod"
   # Text editing tools

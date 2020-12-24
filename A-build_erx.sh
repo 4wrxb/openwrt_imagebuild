@@ -118,19 +118,18 @@ if [ -z "$1" ]; then
   # Use OpenSSL and OpenSSH
   PACKAGES="$PACKAGES $PPPOE_PACKAGES $LUCI_PACKAGES luci-ssl-openssl -dropbear openssh-client openssh-server openvpn-openssl"
   # Luci-apps - Switch & VPN bridge only
-  PACKAGES="$PACKAGES luci-app-openvpn luci-app-wireguard luci-app-uhttpd luci-app-wol"
+  PACKAGES="$PACKAGES luci-app-openvpn luci-app-wireguard luci-app-uhttpd luci-app-vpn-policy-routing luci-app-wol"
   # Avahi daemon for reflector purposes
   PACKAGES="$PACKAGES avahi-dbus-daemon"
   # Shell CMD tools"
-  PACKAGES="$PACKAGES diffutils git git-http htop nano"
+  PACKAGES="$PACKAGES diffutils curl git git-http htop nano"
   # User management commands
   PACKAGES="$PACKAGES sudo shadow-groupadd shadow-groupdel shadow-groupmems shadow-groupmod shadow-useradd shadow-userdel shadow-usermod"
   # Text editing tools
   PACKAGES="$PACKAGES vim-full less"
   # Scripting
   PACKAGES="$PACKAGES python-light python3-light perl"
-  # Switch config (no router) - EXCEPT: keep dnsmask for dhcp on fastnet
-  PACKAGES="$PACKAGES -luci-app-firewall -firewall -iptables -odhcpd -odhcpd-ipv6only"
+  # Using the switch as VPN client, so keep all routing
 else
   while :; do
     case "$1" in
