@@ -28,50 +28,51 @@ Then, run the desired script. The following switches are in current scripts.
 
 ### Config switches (non-default run)
 
+#### Do not install firewall/routing packages
+
 ```shell
 --no-router
 ```
 
-Do not install firewall/routing packages
+#### Do not **remove** pppoe packages
 
 ```shell
 --keep-pppoe
 ```
 
-Do not **remove** pppoe packages
+#### Remove IPv6 packages
 
 ```shell
 --no-ipv6
 ```
 
-Remove IPv6 packages
+#### Do not install LUCI WebUI packages
 
 ```shell
 --no-luci
 ```
 
-Do not install LUCI WebUI packages
+#### Install mbedtls for HTTPS WebUI
 
 ```shell
 --luci-ssl | --luci-mbedtls
 ```
 
-Install mbedtls for HTTPS WebUI
+#### Install openssl for HTTPS WebUI
 
 ```shell
 --luci-openssl
 ```
 
-Install openssl for HTTPS WebUI
+#### Add or remove a single package
 
 ```shell
 -p | +p
 ```
 
-Add or remove a single package
+#### End build script argument capture
 
 ```shell
 --
 ```
 
-End build script argument capture

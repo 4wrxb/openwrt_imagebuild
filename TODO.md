@@ -6,6 +6,7 @@ Includes todos for personal files repo(s)
 
 - Add a cleanup to build scripts to revert to tarball state
 - Use branches of one files repo for all devices?
+- Add notes/pointer to egit
 
 ## ERX-CA Files
 
