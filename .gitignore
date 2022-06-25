@@ -5,3 +5,5 @@ build.log*
 my_files*/*
 # Include the egit config, when downloading this set-up use egit to checkout
 !my_files*/.egit.conf
+# A temporary thing, just load it into the config being generated
+openwrt
