@@ -51,7 +51,7 @@ DEVICE="tplink_c2600"
 NICKNAME="c2600"
 
 # Version dir containing the imagebuilder (relative to script or absolute)
-VER="19.07.5"
+VER="21.02.3"
 
 # NOTE: script assumes this is JUST a directory name
 VERDIR="openwrt-imagebuilder-${VER}-ipq806x-generic.Linux-x86_64"
@@ -116,17 +116,20 @@ LUCI_PACKAGES="uhttpd uhttpd-mod-ubus libiwinfo-lua luci-base luci-app-firewall 
 # Then use my default config OR process build switches
 if [ -z "$1" ]; then
   # Use OpenSSL and OpenSSH
-  PACKAGES="$PACKAGES $PPPOE_PACKAGES $LUCI_PACKAGES luci-ssl-openssl -dropbear openssh-client openssh-server openvpn-openssl"
+  PACKAGES="$PACKAGES $PPPOE_PACKAGES $LUCI_PACKAGES -dropbear -libustream-wolfssl -wpad-basic-wolfssl libustream-openssl luci-ssl-openssl openssh-client openssh-server wpad-basic-openssl"
+  # OpenVPN - EasyRSA only needed if generating certificaties on the device - do it locally with ubuntu_generate_openvpn_config.sh
+  # https://openwrt.org/docs/guide-user/services/vpn/openvpn/automated_pc
+  PACKAGES="$PACKAGES openvpn-openssl" # openvpn-easy-rsa
   # Luci-apps
   PACKAGES="$PACKAGES luci-app-acme luci-app-ddns luci-app-openvpn luci-app-upnp luci-app-wireguard luci-app-uhttpd luci-app-wol acme-dnsapi"
   # Shell CMD tools"
-  PACKAGES="$PACKAGES diffutils curl git git-http htop nano"
+  PACKAGES="$PACKAGES diffutils curl git git-http htop tree"
   # User management commands
   PACKAGES="$PACKAGES sudo shadow-groupadd shadow-groupdel shadow-groupmems shadow-groupmod shadow-useradd shadow-userdel shadow-usermod"
   # Text editing tools
   PACKAGES="$PACKAGES vim-full less"
   # Scripting
-  PACKAGES="$PACKAGES python-light python3-light perl"
+  PACKAGES="$PACKAGES python3-light perl"
 else
   while :; do
     case "$1" in
@@ -184,6 +187,8 @@ fi
 ################################################################################
 # Absorb the FILES switch into the variable to handle a lack of the directory
 if [ -d "$ADDFILES" ]; then
+  # Fix permissions for secure files (git will leave them group readable)
+  find $ADDFILES -type f -a \( -iname \*.private -o -iname \*.key -o -iname \*.crt -o -iname \*.pem \) -exec chmod 600 {} \;
   ln -sf "../$ADDFILES" "$VERDIR/"
   ADDFILES="FILES=${ADDFILES##*/}"
 else
